@@ -12,22 +12,44 @@ namespace WcfService1
     // NOTE: In order to launch WCF Test Client for testing this service, please select Service1.svc or Service1.svc.cs at the Solution Explorer and start debugging.
     public class Service1 : IService1
     {
-        public string GetData(int value)
+        private List<Student> _list = new List<Student>();
+        public Service1()
         {
-            return string.Format("You entered: {0}", value);
+            Student student1 = new Student("Jonas", "F3", 3);
+            Student student2 = new Student("kasper", "F3", 5);
+            Student student3 = new Student("Ian", "F3", 3);
+            _list.Add(student1);
+            _list.Add(student2);
+            _list.Add(student3);
         }
 
-        public CompositeType GetDataUsingDataContract(CompositeType composite)
+        public void AddStudent(string navn, string klassenavn, int rum)
         {
-            if (composite == null)
-            {
-                throw new ArgumentNullException("composite");
-            }
-            if (composite.BoolValue)
-            {
-                composite.StringValue += "Suffix";
-            }
-            return composite;
+            _list.Add(new Student(navn, klassenavn, rum));
+        }
+
+        public Student FindStudents(string name)
+        {
+            Student FoundStudent = _list.Find(x => x.Name.Equals(name));
+
+            return FoundStudent;
+        }
+
+        public List<Student> GetAllStudent()
+        {
+            return _list;
+        }
+
+        public void RemoveStudent(string navn)
+        {
+            _list.Remove(FindStudents(navn));
+        }
+
+        public void EditStudent(string navn, string klassenavn, int rum)
+        {
+            RemoveStudent(navn);
+            AddStudent(navn, klassenavn, rum);
+
         }
     }
 }
